@@ -20,24 +20,18 @@ function List(props) {
 class Todos extends React.Component {
   addItem = e => {
     e.preventDefault();
-    const name = this.input.value;
-    this.input.value = "";
 
     this.props.store.dispatch(
-      addTodoAction({
-        name,
-        complete: false,
-        id: generateId()
-      })
+      handleAddTodo(this.input.value, () => (this.input.value = ""))
     );
   };
 
   removeItem = todo => {
-    this.props.store.dispatch(removeTodoAction(todo.id));
+    this.props.store.dispatch(handleDeleteTodo(todo));
   };
 
   toggleItem = id => {
-    this.props.store.dispatch(toggleTodoAction(id));
+    this.props.store.dispatch(handleToggle(id));
   };
 
   render() {
@@ -63,19 +57,14 @@ class Todos extends React.Component {
 class Goals extends React.Component {
   addItem = e => {
     e.preventDefault();
-    const name = this.input.value;
-    this.input.value = "";
 
     this.props.store.dispatch(
-      addGoalAction({
-        id: generateId(),
-        name
-      })
+      handleAddGoal(this.input.value, () => (this.input.value = ""))
     );
   };
 
   removeItem = goal => {
-    this.props.store.dispatch(removeGoalAction(goal.id));
+    this.props.store.dispatch(handleDeleteGoal(goal));
   };
 
   render() {
@@ -98,14 +87,18 @@ class Goals extends React.Component {
 class App extends React.Component {
   componentDidMount() {
     const { store } = this.props;
-
+    store.dispatch(handleInitialData());
     //Anti pattern not recommended but needed here
     store.subscribe(() => this.forceUpdate());
   }
 
   render() {
     const { store } = this.props;
-    const { todos, goals } = store.getState();
+    const { todos, goals, loading } = store.getState();
+
+    if (loading === true) {
+      return <h3>Loading</h3>;
+    }
 
     return (
       <div>
