@@ -1,54 +1,62 @@
 //Dictionary Strings
-const ACTIONS = {
-  ADD_TODO: "ADD_TODO",
-  REMOVE_TODO: "REMOVE_TODO",
-  TOGGLE_TODO: "TOGGLE_TODO",
-  ADD_GOAL: "ADD_GOAL",
-  REMOVE_GOAL: "REMOVE_GOAL",
-  RECEIVE_DATA: "RECEIVE_DATA"
-};
+// const ACTIONS = {
+//   ADD_TODO: "ADD_TODO",
+//   REMOVE_TODO: "REMOVE_TODO",
+//   TOGGLE_TODO: "TOGGLE_TODO",
+//   ADD_GOAL: "ADD_GOAL",
+//   REMOVE_GOAL: "REMOVE_GOAL",
+//   RECEIVE_DATA: "RECEIVE_DATA"
+// };
+
+const REMOVE_TODO = "REMOVE_TODO";
+const ADD_TODO = "ADD_TODO";
+const TOGGLE_TODO = "TOGGLE_TODO";
+const ADD_GOAL = "ADD_GOAL";
+const REMOVE_GOAL = "REMOVE_GOAL";
+const RECEIVE_DATA = "RECEIVE_DATA";
 
 //Action Creators
 function addTodoAction(todo) {
   return {
-    type: ACTIONS.ADD_TODO,
+    type: ADD_TODO,
     todo
   };
 }
 
 function removeTodoAction(id) {
   return {
-    type: ACTIONS.REMOVE_TODO,
+    type: REMOVE_TODO,
     id
   };
 }
 function toggleTodoAction(id) {
   return {
-    type: ACTIONS.TOGGLE_TODO,
+    type: TOGGLE_TODO,
     id
   };
 }
 
 function addGoalAction(goal) {
   return {
-    type: ACTIONS.ADD_GOAL,
+    type: ADD_GOAL,
     goal
   };
 }
 function removeGoalAction(id) {
   return {
-    type: ACTIONS.REMOVE_GOAL,
+    type: REMOVE_GOAL,
     id
   };
 }
 
 function receiveDataAction(todos, goals) {
   return {
-    type: ACTIONS.RECEIVE_DATA,
+    type: RECEIVE_DATA,
     todos,
     goals
   };
 }
+
 function handleAddTodo(name, cb) {
   return dispatch => {
     return API.saveTodo(name)
@@ -116,17 +124,17 @@ function handleInitialData() {
 // App Code
 function todos(state = [], action) {
   switch (action.type) {
-    case ACTIONS.ADD_TODO:
+    case ADD_TODO:
       return state.concat([action.todo]);
-    case ACTIONS.REMOVE_TODO:
+    case REMOVE_TODO:
       return state.filter(todo => todo.id !== action.id);
-    case ACTIONS.TOGGLE_TODO:
+    case TOGGLE_TODO:
       return state.map(todo =>
         todo.id !== action.id
           ? todo
           : Object.assign({}, todo, { complete: !todo.complete })
       );
-    case ACTIONS.RECEIVE_DATA:
+    case RECEIVE_DATA:
       return action.todos;
     default:
       return state;
@@ -135,12 +143,12 @@ function todos(state = [], action) {
 
 function goals(state = [], action) {
   switch (action.type) {
-    case ACTIONS.ADD_GOAL:
+    case ADD_GOAL:
       return state.concat([action.goal]);
 
-    case ACTIONS.REMOVE_GOAL:
+    case REMOVE_GOAL:
       return state.filter(goal => goal.id !== action.id);
-    case ACTIONS.RECEIVE_DATA:
+    case RECEIVE_DATA:
       return action.goals;
     default:
       return state;
@@ -149,7 +157,7 @@ function goals(state = [], action) {
 
 function loading(state = true, action) {
   switch (action.type) {
-    case ACTIONS.RECEIVE_DATA:
+    case RECEIVE_DATA:
       return false;
     default:
       return state;
@@ -158,13 +166,13 @@ function loading(state = true, action) {
 
 const checker = store => next => action => {
   if (
-    action.type === ACTIONS.ADD_TODO &&
+    action.type === ADD_TODO &&
     action.todo.name.toLowerCase().includes("bitcoin")
   ) {
     return alert(`Nope, That's a bad idea.`);
   }
   if (
-    action.type === ACTIONS.ADD_GOAL &&
+    action.type === ADD_GOAL &&
     action.goal.name.toLowerCase().includes("bitcoin")
   ) {
     return alert(`Nope, That's a bad idea.`);
